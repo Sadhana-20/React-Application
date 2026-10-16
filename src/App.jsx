@@ -120,49 +120,212 @@
 // }
 
 // export default App
+// import {useState} from "react";
+// import Title from "./components/UI/button/Title.jsx";
+// function App() {
+//   const [count, setCount]=useState(0);
+//   return(
+//     <>
+//     <Title count={count} />
+//     <button onClick={() => setCount(count + 1)}>Click me</button>
+//     </>
+//   );
+// }
+// export default App;
+
+// import { useState } from "react";
+
+// const App = () => {
+//   const [form, setForm] = useState({
+//     firstName: "",
+//     email: "",
+//     age: "",
+//   });
+
+//   const [submitted, setSubmitted] = useState(null);
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setForm((prev) => ({ ...prev, [name]: value }));
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     setSubmitted(form);
+//   };
+
+//   return (
+//     <div>
+//       <h1>Registration Form</h1>
+
+//       <form onSubmit={handleSubmit}>
+//         <label>First Name:</label>
+//         <input
+//           name="firstName"
+//           value={form.firstName}
+//           onChange={handleChange}
+//           required
+//         />
+
+//         <br /><br />
+
+//         <label>Email:</label>
+//         <input
+//           name="email"
+//           type="email"
+//           value={form.email}
+//           onChange={handleChange}
+//           required
+//         />
+
+//         <br /><br />
+
+//         <label>Age:</label>
+//         <input
+//           name="age"
+//           type="number"
+//           value={form.age}
+//           onChange={handleChange}
+//           required
+//         />
+
+//         <br /><br />
+
+//         <button type="submit">Submit</button>
+//       </form>
+
+//       {submitted && (
+//         <div>
+//           <h2>Submitted Details</h2>
+//           <p>First Name: {submitted.firstName}</p>
+//           <p>Email: {submitted.email}</p>
+//           <p>Age: {submitted.age}</p>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// // export default App;
 
 import { useEffect, useState } from 'react';
 import './App.css';
+import AddUserForm from './components/UI/button/Form.jsx';
 
 const App = () => {
   const [counter, setCounter] = useState(0);
-  const [data, setData] = useState([]);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch('https://jsonplaceholder.typicode.com/users');
-      const data = await response.json();
-      setData(data);
-    }
-    fetchData();
-  }, []);
+  const [users, setUsers] = useState([]);
 
-  console.log(data,"data");
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await fetch(
+        'https://jsonplaceholder.typicode.com/users'
+      );
+      const userData = await response.json();
+      setUsers(userData);
+    };
+
+    fetchUsers();
+  }, []);
+  
+const handleAdd = (newUser) => {
+  const updatedUsers = [...users];
+
+  updatedUsers.push({
+    id: Date.now(),
+    name: newUser.name,
+    username: newUser.username,
+    email: newUser.email,
+    phone: newUser.phone,
+    website: newUser.website,
+    address: {
+      street: newUser.street,
+      suite: newUser.suite,
+      city: newUser.city,
+      zipcode: newUser.zipcode,
+      geo: {
+        lat: newUser.lat,
+        lng: newUser.lng
+      }
+    },
+    company: {
+      name: newUser.companyName,
+      catchPhrase: newUser.catchPhrase,
+      bs: newUser.bs
+    }
+  });
+
+  setUsers(updatedUsers);
+};
+
+  // const handleAdd = (newUser) => {
+  //   const updatedUsers = [...users];
+
+  //   updatedUsers.push({
+  //     id: Date.now(),
+  //     name: newUser.name,
+  //     username: newUser.username,
+  //     email: newUser.email,
+  //     phone: "",
+  //     website: "",
+  //     address: {
+  //       street: "",
+  //       suite: "",
+  //       city: "",
+  //       zipcode: "",
+  //       geo: {
+  //         lat: "",
+  //         lng: ""
+  //       }
+  //     },
+  //     company: {
+  //       name: "",
+  //       catchPhrase: "",
+  //       bs: ""
+  //     }
+  //   });
+
+  //   setUsers(updatedUsers);
+  // };
+
+  console.log(users, 'data');
 
   return (
-    <div className="users-page">
-      <section className="users-box">
-        <h1>Users</h1>
-        {/* <p className="counter">
-          Counter: {counter}{' '}
-          <button type="button" onClick={() => setCounter(counter + 1)}>Increment</button>{' '}
-          <button type="button" onClick={() => setCounter(counter - 1)}>Decrement</button>
-        </p> */}
+    <main className="user-directory">
+      <h1>User Directory</h1>
 
-        {data.map((user) => (
-          <div className="user-card" key={user.id}>
-            <h2>{user.name} (@{user.username})</h2>
-            <p><strong>ID:</strong> {user.id}</p>
+      <AddUserForm onAdd={handleAdd} />
+
+      <section className="user-list" aria-label="Users">
+        {users.map((user) => (
+          <article className="user-card" key={user.id}>
+            <h2>{user.name}</h2>
+
+            <p><strong>Username:</strong> {user.username}</p>
             <p><strong>Email:</strong> {user.email}</p>
             <p><strong>Phone:</strong> {user.phone}</p>
             <p><strong>Website:</strong> {user.website}</p>
-            <p><strong>Address:</strong> {user.address.street}, {user.address.suite}, {user.address.city}, {user.address.zipcode}</p>
-            <p><strong>Coordinates:</strong> {user.address.geo.lat} - {user.address.geo.lng}</p>
-            <p><strong>Company:</strong> {user.company.name} — {user.company.catchPhrase} ({user.company.bs})</p>
-          </div>
+
+            <p>
+              <strong>Address:</strong>{' '}
+              {user.address.street}, {user.address.suite},{' '}
+              {user.address.city}, {user.address.zipcode}
+            </p>
+
+            <p>
+              <strong>Coordinates:</strong>{' '}
+              {user.address.geo.lat}, {user.address.geo.lng}
+            </p>
+
+            <p>
+              <strong>Company:</strong>{' '}
+              {user.company.name} - {user.company.catchPhrase} - {user.company.bs}
+            </p>
+          </article>
         ))}
       </section>
-    </div>
+    </main>
   );
-}
+};
+
 export default App;
