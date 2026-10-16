@@ -258,36 +258,6 @@ const handleAdd = (newUser) => {
   setUsers(updatedUsers);
 };
 
-  // const handleAdd = (newUser) => {
-  //   const updatedUsers = [...users];
-
-  //   updatedUsers.push({
-  //     id: Date.now(),
-  //     name: newUser.name,
-  //     username: newUser.username,
-  //     email: newUser.email,
-  //     phone: "",
-  //     website: "",
-  //     address: {
-  //       street: "",
-  //       suite: "",
-  //       city: "",
-  //       zipcode: "",
-  //       geo: {
-  //         lat: "",
-  //         lng: ""
-  //       }
-  //     },
-  //     company: {
-  //       name: "",
-  //       catchPhrase: "",
-  //       bs: ""
-  //     }
-  //   });
-
-  //   setUsers(updatedUsers);
-  // };
-
   console.log(users, 'data');
 
   return (
